@@ -67,9 +67,6 @@ data class Credit(
         private val VINCE = Credit(
                 "Vince Linise", "https://avatars0.githubusercontent.com/u/32978709?s=400", Type.ROM,
                 "https://github.com/ecnivtwelve/")
-        private val SHEN = Credit(
-                "Wenlin Shen", "https://avatars1.githubusercontent.com/u/21334079?s=400", Type.ROM,
-                "https://github.com/hugwalk/")
         private val DAGR = Credit(
                 "DarkAngelGR", "https://avatars1.githubusercontent.com/u/43799929?s=400", Type.ROM,
                 "https://github.com/DarkAngelGR/")
@@ -111,7 +108,7 @@ data class Credit(
             Type.UI_CONTRIBUTION, "https://twitter.com/link6155")
         
         val EXTRA_CREDITS = arrayListOf(
-            JOEY, AKITO, BLISS, VINCE, SHEN, DAGR,
+            JOEY, AKITO, BLISS, VINCE, DAGR,
             JAMES, MAX, SASI, ALEX, LUKAS,
             PATRYK, LUMIQ, KEVIN, EDUARDO, ANTHONY)
     }
