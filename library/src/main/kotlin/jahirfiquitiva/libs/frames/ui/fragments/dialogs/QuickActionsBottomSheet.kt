@@ -71,7 +71,7 @@ class QuickActionsBottomSheet : BaseBottomSheet() {
     }
     
     private fun doAction(index: Int) {
-        val rightOption = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) index + 2 else index
+        val rightOption = index
         val downloadOption = if (allowExternal) 4 else 3
         (activity as? BaseWallpaperActionsActivity<*>)?.let {
             if (rightOption == downloadOption) {

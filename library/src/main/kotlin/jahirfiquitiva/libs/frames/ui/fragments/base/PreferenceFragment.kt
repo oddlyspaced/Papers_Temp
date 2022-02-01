@@ -86,9 +86,6 @@ abstract class PreferenceFragment : Fragment() {
         val listView = ListView(activity)
         listView.id = android.R.id.list
         listView.dividerHeight = 0
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            horizontalPadding = 5.33
-        }
         val horizontalPadding = (horizontalPadding * resources.displayMetrics.density).toInt()
         listView.setPadding(horizontalPadding, 0, horizontalPadding, 0)
         return listView
@@ -108,6 +105,7 @@ abstract class PreferenceFragment : Fragment() {
         }
     }
     
+    @SuppressLint("DiscouragedPrivateApi")
     override fun onStop() {
         super.onStop()
         try {
@@ -124,6 +122,7 @@ abstract class PreferenceFragment : Fragment() {
         super.onDestroyView()
     }
     
+    @SuppressLint("DiscouragedPrivateApi")
     override fun onDestroy() {
         super.onDestroy()
         try {
@@ -143,6 +142,7 @@ abstract class PreferenceFragment : Fragment() {
         }
     }
     
+    @SuppressLint("DiscouragedPrivateApi")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         super.onActivityResult(requestCode, resultCode, data)
         try {
@@ -158,6 +158,7 @@ abstract class PreferenceFragment : Fragment() {
     }
     
     private var preferenceScreen: PreferenceScreen?
+        @SuppressLint("DiscouragedPrivateApi")
         get() = try {
             val m = PreferenceManager::class.java.getDeclaredMethod("getPreferenceScreen")
             m.isAccessible = true
@@ -165,6 +166,7 @@ abstract class PreferenceFragment : Fragment() {
         } catch (e: Exception) {
             null
         }
+        @SuppressLint("DiscouragedPrivateApi")
         set(screen) = try {
             val m = PreferenceManager::class.java.getDeclaredMethod(
                 "setPreferences",
@@ -184,6 +186,7 @@ abstract class PreferenceFragment : Fragment() {
         } catch (ignored: Exception) {
         }
     
+    @SuppressLint("DiscouragedPrivateApi")
     protected fun addPreferencesFromResource(resId: Int) {
         requirePreferenceManager()
         try {

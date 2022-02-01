@@ -35,10 +35,8 @@ class QuickActionsAdapter(
     
     private val options: ArrayList<Pair<Int, Int>> by lazy {
         val correctList = ArrayList<Pair<Int, Int>>()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            correctList.add(Pair(R.drawable.ic_apply_homescreen, R.string.home_screen))
-            correctList.add(Pair(R.drawable.ic_apply_lockscreen, R.string.lock_screen))
-        }
+        correctList.add(Pair(R.drawable.ic_apply_homescreen, R.string.home_screen))
+        correctList.add(Pair(R.drawable.ic_apply_lockscreen, R.string.lock_screen))
         correctList.add(Pair(R.drawable.ic_apply_both, R.string.home_lock_screen))
         if (allowExternal)
             correctList.add(

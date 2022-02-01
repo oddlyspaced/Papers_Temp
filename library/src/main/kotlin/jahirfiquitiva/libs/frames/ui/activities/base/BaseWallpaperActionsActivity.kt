@@ -44,7 +44,7 @@ import jahirfiquitiva.libs.kext.extensions.getUri
 import jahirfiquitiva.libs.kext.ui.activities.ActivityWFragments
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.*
 
 abstract class BaseWallpaperActionsActivity<T : FramesKonfigs> : ActivityWFragments<T>() {
     
@@ -135,7 +135,7 @@ abstract class BaseWallpaperActionsActivity<T : FramesKonfigs> : ActivityWFragme
                 if (toApply) {
                     if (customAction == 3) {
                         applyForOption(
-                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) 1 else 3, dest)
+                            3, dest)
                     } else {
                         showWallpaperApplyOptions(dest, customAction)
                     }
@@ -206,7 +206,7 @@ abstract class BaseWallpaperActionsActivity<T : FramesKonfigs> : ActivityWFragme
     
     private fun applyForOption(index: Int, dest: File? = null) {
         val rightPosition =
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) index + 2 else index
+            index
         if (dest != null) {
             applyWallpaper(
                 dest, rightPosition == 0, rightPosition == 1, rightPosition == 2,
@@ -251,7 +251,8 @@ abstract class BaseWallpaperActionsActivity<T : FramesKonfigs> : ActivityWFragme
                         toHomeScreen -> R.string.home_screen
                         toLockScreen -> R.string.lock_screen
                         else -> R.string.empty
-                    }).toLowerCase()), Snackbar.LENGTH_LONG)
+                    }).toLowerCase(Locale.ROOT)
+            ), Snackbar.LENGTH_LONG)
     }
     
     private var file: File? = null

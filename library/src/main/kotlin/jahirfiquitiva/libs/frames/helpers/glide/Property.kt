@@ -30,21 +30,11 @@ abstract class FloatProp<T>(val name: String) {
 }
 
 fun <T> createFloatProperty(impl: FloatProp<T>): Property<T, Float> {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        object : FloatProperty<T>(impl.name) {
-            override fun get(o: T): Float = impl[o]
-            
-            override fun setValue(o: T, value: Float) {
-                impl[o] = value
-            }
-        }
-    } else {
-        object : Property<T, Float>(Float::class.java, impl.name) {
-            override fun get(o: T): Float = impl[o]
-            
-            override fun set(o: T, value: Float) {
-                impl[o] = value
-            }
+    return object : FloatProperty<T>(impl.name) {
+        override fun get(o: T): Float = impl[o]
+
+        override fun setValue(o: T, value: Float) {
+            impl[o] = value
         }
     }
 }

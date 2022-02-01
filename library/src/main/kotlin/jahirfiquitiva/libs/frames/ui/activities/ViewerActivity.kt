@@ -37,7 +37,6 @@ import android.view.animation.ScaleAnimation
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.core.view.ViewCompat
 import androidx.palette.graphics.Palette
 import androidx.room.Room
 import ca.allanwang.kau.utils.contentView
@@ -47,7 +46,6 @@ import ca.allanwang.kau.utils.isNetworkAvailable
 import ca.allanwang.kau.utils.postDelayed
 import ca.allanwang.kau.utils.setMarginBottom
 import ca.allanwang.kau.utils.setMarginTop
-import ca.allanwang.kau.utils.setPaddingBottom
 import ca.allanwang.kau.utils.tint
 import ca.allanwang.kau.utils.toast
 import ca.allanwang.kau.utils.visibleIf
@@ -98,7 +96,6 @@ import jahirfiquitiva.libs.kext.extensions.getStatusBarHeight
 import jahirfiquitiva.libs.kext.extensions.hasContent
 import jahirfiquitiva.libs.kext.extensions.isInPortraitMode
 import jahirfiquitiva.libs.kext.extensions.navigationBarHeight
-import jahirfiquitiva.libs.kext.extensions.notNull
 import jahirfiquitiva.libs.kext.extensions.string
 import jahirfiquitiva.libs.kext.extensions.toBitmap
 import jahirfiquitiva.libs.ziv.ZoomableImageView
@@ -183,13 +180,9 @@ open class ViewerActivity : BaseWallpaperActionsActivity<FramesKonfigs>() {
         
         framesPostponeEnterTransition()
         
-        currentWallPosition = savedInstanceState?.getInt(CURRENT_WALL_POSITION) ?: {
-            intent?.getIntExtra(CURRENT_WALL_POSITION, 0) ?: 0
-        }()
+        currentWallPosition = savedInstanceState?.getInt(CURRENT_WALL_POSITION) ?: (intent?.getIntExtra(CURRENT_WALL_POSITION, 0) ?: 0)
         
-        wallPositionDifference = savedInstanceState?.getInt(POSITION_DIFF) ?: {
-            intent?.getIntExtra(POSITION_DIFF, 0) ?: 0
-        }()
+        wallPositionDifference = savedInstanceState?.getInt(POSITION_DIFF) ?: (intent?.getIntExtra(POSITION_DIFF, 0) ?: 0)
         
         intent?.getParcelableArrayListExtra<Wallpaper>("wallpapers")?.let {
             wallpapersList.clear()
@@ -219,8 +212,6 @@ open class ViewerActivity : BaseWallpaperActionsActivity<FramesKonfigs>() {
         toolbar?.tint(color(android.R.color.white), false)
         
         findViewById<View>(R.id.bottom_bar_container).setNavBarMargins().apply {
-            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && isInPortraitMode)
-                setPaddingBottom(50.dpToPx)
         }
         
         findViewById<View>(R.id.apply_button).setOnClickListener {
@@ -692,15 +683,13 @@ open class ViewerActivity : BaseWallpaperActionsActivity<FramesKonfigs>() {
             
             var bottomNavBar = 0
             var sideNavBar = 0
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                val tabletMode = resources.getBoolean(R.bool.isTablet)
-                if (tabletMode || isInPortraitMode) {
-                    bottomNavBar = navigationBarHeight
-                } else {
-                    sideNavBar = navigationBarHeight
-                }
+            val tabletMode = resources.getBoolean(R.bool.isTablet)
+            if (tabletMode || isInPortraitMode) {
+                bottomNavBar = navigationBarHeight
+            } else {
+                sideNavBar = navigationBarHeight
             }
-            
+
             var extraLeft = 0
             var extraRight = 0
             if (currentRotation == 90) extraRight = sideNavBar
@@ -710,10 +699,7 @@ open class ViewerActivity : BaseWallpaperActionsActivity<FramesKonfigs>() {
                 snack.view.paddingLeft + extraLeft, snack.view.paddingTop,
                 snack.view.paddingRight + extraRight,
                 snack.view.paddingBottom + bottomNavBar)
-            
-            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && isInPortraitMode)
-                snack.view.setMarginBottom(50.dpToPx)
-            
+
             val snackText = snack.view.findViewById<TextView>(R.id.snackbar_text)
             snackText.setTextColor(Color.WHITE)
             snackText.maxLines = 3
@@ -729,20 +715,18 @@ open class ViewerActivity : BaseWallpaperActionsActivity<FramesKonfigs>() {
     
     private fun setSystemUIVisibility(visible: Boolean, withSystemBars: Boolean = true) {
         Handler().post {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && withSystemBars) {
-                window.decorView.systemUiVisibility = if (visible)
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                else
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
-                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-                        View.SYSTEM_UI_FLAG_FULLSCREEN or
-                        View.SYSTEM_UI_FLAG_IMMERSIVE or
-                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-            }
+            window.decorView.systemUiVisibility = if (visible)
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            else
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
+                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                    View.SYSTEM_UI_FLAG_FULLSCREEN or
+                    View.SYSTEM_UI_FLAG_IMMERSIVE or
+                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
             changeBarsVisibility(visible)
             visibleSystemUI = visible
         }

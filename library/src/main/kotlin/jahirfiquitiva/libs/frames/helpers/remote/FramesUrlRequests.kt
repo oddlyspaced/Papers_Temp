@@ -16,7 +16,6 @@
 package jahirfiquitiva.libs.frames.helpers.remote
 
 import android.graphics.BitmapFactory
-import android.os.Build
 import android.util.Log
 import jahirfiquitiva.libs.frames.data.models.Dimension
 import jahirfiquitiva.libs.frames.data.models.WallpaperInfo
@@ -36,13 +35,16 @@ object FramesUrlRequests {
             val ins = BufferedInputStream(urlConnection.inputStream)
             val reader = BufferedReader(InputStreamReader(ins))
             var line: String? = null
-            while ({ line = reader.readLine(); line }() != null) {
+            while (run {
+                    line = reader.readLine()
+                    line
+                } != null) {
                 result.append(line)
             }
             ins.close()
             reader.close()
         } catch (e: Exception) {
-            Log.e("Error", e.message)
+            Log.e("Error", e.message.toString())
         } finally {
             urlConnection.disconnect()
         }
@@ -67,7 +69,7 @@ object FramesUrlRequests {
                     size, Dimension(options.outWidth.toLong(), options.outHeight.toLong()))
             }
         } catch (e: Exception) {
-            Log.e("Error", e.message)
+            Log.e("Error", e.message.toString())
         } finally {
             urlConnection.disconnect()
         }
@@ -77,8 +79,6 @@ object FramesUrlRequests {
     private fun buildHttpUrlConnection(url: String): HttpURLConnection? {
         return (if (url.matches("^(https?)://.*$".toRegex())) {
             (URL(url).openConnection() as HttpsURLConnection).apply {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-                    sslSocketFactory = FramesSocketFactory()
             }
         } else {
             URL(url).openConnection() as HttpURLConnection

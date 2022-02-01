@@ -52,8 +52,8 @@ import org.jetbrains.anko.doAsync
 
 open class SettingsFragment : PreferenceFragment() {
     
-    internal var database: FavoritesDatabase? = null
-    internal var downloadLocation: Preference? = null
+    private var database: FavoritesDatabase? = null
+    private var downloadLocation: Preference? = null
     
     var dialog: MaterialDialog? = null
     
@@ -106,24 +106,12 @@ open class SettingsFragment : PreferenceFragment() {
         
         val uiPrefs = findPreference("ui_settings") as? PreferenceCategory
         val navbarPref = findPreference("color_navbar") as? SwitchPreference
-        
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            uiPrefs?.removePreference(navbarPref)
-        }
-        
+
         val themePref = findPreference("theme")
         themePref?.setOnPreferenceClickListener {
             clearDialog()
-            val currentTheme = configs.currentTheme
             dialog = activity?.mdDialog {
                 title(R.string.theme_setting_title)
-                listItemsSingleChoice(
-                    R.array.themes_options, initialSelection = currentTheme) { _, index, _ ->
-                    if (index != currentTheme) {
-                        configs.currentTheme = index
-                        (activity as? ThemedActivity<*>)?.onThemeChanged()
-                    }
-                }
                 positiveButton(android.R.string.ok)
                 negativeButton(android.R.string.cancel)
             }

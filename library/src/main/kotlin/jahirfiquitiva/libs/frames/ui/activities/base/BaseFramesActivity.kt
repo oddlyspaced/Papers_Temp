@@ -108,14 +108,14 @@ abstract class BaseFramesActivity<T : FramesKonfigs> : BaseWallpaperActionsActiv
         postDelayed(0) { startLicenseCheck() }
     }
     
-    override fun onSaveInstanceState(outState: Bundle?) {
-        outState?.putInt("pickerKey", pickerKey)
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt("pickerKey", pickerKey)
         super.onSaveInstanceState(outState)
     }
     
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        pickerKey = savedInstanceState?.getInt("pickerKey", 0) ?: 0
+        pickerKey = savedInstanceState.getInt("pickerKey", 0) ?: 0
     }
     
     private fun initDonations() {

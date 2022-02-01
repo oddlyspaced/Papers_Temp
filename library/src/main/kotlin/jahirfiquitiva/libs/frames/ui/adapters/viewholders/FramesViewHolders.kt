@@ -39,6 +39,7 @@ import jahirfiquitiva.libs.frames.helpers.glide.GlidePaletteListener
 import jahirfiquitiva.libs.frames.helpers.glide.loadPicture
 import jahirfiquitiva.libs.frames.helpers.glide.smoothAnimator
 import jahirfiquitiva.libs.kext.extensions.*
+import java.util.*
 
 const val DETAILS_OPACITY = 0.8F
 const val COLLECTION_DETAILS_OPACITY = 0.4F
@@ -134,7 +135,7 @@ class CollectionHolder(itemView: View) : FramesWallpaperHolder(itemView) {
         val thumb = rightCover.thumbUrl
         with(itemView) {
             val filled = context.boolean(R.bool.enable_filled_collection_preview)
-            title?.text = if (filled) collection.name.toUpperCase() else collection.name
+            title?.text = if (filled) collection.name.toUpperCase(Locale.ROOT) else collection.name
             title?.setTextColor(context.getPrimaryTextColorFor(context.tilesColor))
             amount?.text = collection.wallpapers.size.toString()
             amount?.setTextColor(context.getSecondaryTextColorFor(context.tilesColor))

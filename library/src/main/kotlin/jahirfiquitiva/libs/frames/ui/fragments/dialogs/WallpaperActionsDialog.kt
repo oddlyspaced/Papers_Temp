@@ -42,6 +42,7 @@ import jahirfiquitiva.libs.kext.extensions.actv
 import jahirfiquitiva.libs.kext.extensions.context
 import jahirfiquitiva.libs.kext.helpers.DownloadThread
 import java.io.File
+import java.util.*
 
 @Suppress("DEPRECATION")
 class WallpaperActionsDialog : DialogFragment() {
@@ -231,13 +232,16 @@ class WallpaperActionsDialog : DialogFragment() {
     
     private fun showDownloadResult(dest: File) {
         try {
-            (activity as? BaseWallpaperActionsActivity<*>)?.reportWallpaperDownloaded(dest) ?: {
-                activity?.snackbar(getString(R.string.download_successful, dest.toString())) {
-                    setAction(R.string.open) {
-                        activity?.openWallpaper(Uri.fromFile(dest))
-                    }
+            (activity as? BaseWallpaperActionsActivity<*>)?.reportWallpaperDownloaded(dest) ?: activity?.snackbar(
+                getString(
+                    R.string.download_successful,
+                    dest.toString()
+                )
+            ) {
+                setAction(R.string.open) {
+                    activity?.openWallpaper(Uri.fromFile(dest))
                 }
-            }()
+            }
         } catch (e: Exception) {
             FL.e(e.message)
             activity?.toast(R.string.download_successful_short)
@@ -264,22 +268,18 @@ class WallpaperActionsDialog : DialogFragment() {
             }
             
             try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    if (toBoth) {
-                        wm.setBitmap(finalResource, null, true)
-                    } else {
-                        when {
-                            toHomeScreen -> wm.setBitmap(
-                                finalResource, null, true, WallpaperManager.FLAG_SYSTEM)
-                            toLockScreen -> wm.setBitmap(
-                                finalResource, null, true, WallpaperManager.FLAG_LOCK)
-                            else -> FL.e("The unexpected case has happened :O")
-                        }
-                    }
+                if (toBoth) {
+                    wm.setBitmap(finalResource, null, true)
                 } else {
-                    wm.setBitmap(finalResource)
+                    when {
+                        toHomeScreen -> wm.setBitmap(
+                            finalResource, null, true, WallpaperManager.FLAG_SYSTEM)
+                        toLockScreen -> wm.setBitmap(
+                            finalResource, null, true, WallpaperManager.FLAG_LOCK)
+                        else -> FL.e("The unexpected case has happened :O")
+                    }
                 }
-                
+
                 showAppliedResult()
             } catch (e: Exception) {
                 FL.e(e.message)
@@ -300,7 +300,8 @@ class WallpaperActionsDialog : DialogFragment() {
                             toHomeScreen -> R.string.home_screen
                             toLockScreen -> R.string.lock_screen
                             else -> R.string.empty
-                        }).toLowerCase()))
+                        }
+                    ).toLowerCase(Locale.ROOT)))
         } catch (e: Exception) {
             FL.e(e.message)
             activity?.toast(R.string.apply_successful_short)

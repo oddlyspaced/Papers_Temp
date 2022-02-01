@@ -27,42 +27,38 @@ fun FragmentActivity.framesPostponeEnterTransition(
     onTransitionEnd: () -> Unit = {},
     onTransitionStart: () -> Unit = {}
                                                   ) {
-    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-        supportPostponeEnterTransition()
-        
-        concatSharedElements().forEach {
-            window?.sharedElementEnterTransition?.excludeTarget(it?.first, true)
+    supportPostponeEnterTransition()
+
+    concatSharedElements().forEach {
+        window?.sharedElementEnterTransition?.excludeTarget(it?.first, true)
+    }
+
+    setEnterSharedElementCallback(object : SharedElementCallback() {
+        override fun onSharedElementEnd(
+            sharedElementNames: MutableList<String>?,
+            sharedElements: MutableList<View>?,
+            sharedElementSnapshots: MutableList<View>?
+                                       ) {
+            super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots)
+            onTransitionEnd()
         }
-        
-        setEnterSharedElementCallback(object : SharedElementCallback() {
-            override fun onSharedElementEnd(
-                sharedElementNames: MutableList<String>?,
-                sharedElements: MutableList<View>?,
-                sharedElementSnapshots: MutableList<View>?
-                                           ) {
-                super.onSharedElementEnd(sharedElementNames, sharedElements, sharedElementSnapshots)
-                onTransitionEnd()
-            }
-            
-            override fun onSharedElementStart(
-                sharedElementNames: MutableList<String>?,
-                sharedElements: MutableList<View>?,
-                sharedElementSnapshots: MutableList<View>?
-                                             ) {
-                super.onSharedElementStart(
-                    sharedElementNames, sharedElements, sharedElementSnapshots)
-                onTransitionStart()
-            }
-        })
-    } else onTransitionEnd()
+
+        override fun onSharedElementStart(
+            sharedElementNames: MutableList<String>?,
+            sharedElements: MutableList<View>?,
+            sharedElementSnapshots: MutableList<View>?
+                                         ) {
+            super.onSharedElementStart(
+                sharedElementNames, sharedElements, sharedElementSnapshots)
+            onTransitionStart()
+        }
+    })
 }
 
 fun FragmentActivity.safeStartPostponedEnterTransition() {
-    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-        try {
-            supportStartPostponedEnterTransition()
-        } catch (e: Exception) {
-        }
+    try {
+        supportStartPostponedEnterTransition()
+    } catch (e: Exception) {
     }
 }
 
@@ -79,12 +75,10 @@ fun FragmentActivity.concatSharedElements(vararg activitySharedElements: Pair<Vi
         decor.findViewById<View?>(R.id.appbar),
         decor.findViewById<View?>(R.id.toolbar),
         decor.findViewById<View?>(R.id.tabs))
-    
-    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-        views.add(decor.findViewById<View?>(android.R.id.statusBarBackground))
-        views.add(decor.findViewById<View?>(android.R.id.navigationBarBackground))
-    }
-    
+
+    views.add(decor.findViewById<View?>(android.R.id.statusBarBackground))
+    views.add(decor.findViewById<View?>(android.R.id.navigationBarBackground))
+
     views.jfilter { it != null }
         .forEach {
             it?.let { sharedElements.add(Pair(it, ViewCompat.getTransitionName(it) ?: "")) }

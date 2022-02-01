@@ -15,6 +15,7 @@
  */
 package jahirfiquitiva.libs.frames.ui.adapters
 
+import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.palette.graphics.Palette
 import ca.allanwang.kau.utils.inflate
@@ -36,6 +37,7 @@ class WallpaperInfoAdapter(private val listener: (forCollection: Boolean, color:
     private val details = ArrayList<WallpaperDetail>()
     private val colors = ArrayList<Int>()
     
+    @SuppressLint("NotifyDataSetChanged")
     fun setDetails(
         collections: ArrayList<Collection>,
         details: ArrayList<WallpaperDetail>,
